@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpockvsjunitApplication {
+public class BoardGamesStoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpockvsjunitApplication.class, args);
+        SpringApplication.run(BoardGamesStoreApplication.class, args);
     }
 
 }
