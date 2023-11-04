@@ -1,4 +1,4 @@
-package com.boardgamesstore.spockvsjunit;
+package com.example.boardgamesstore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

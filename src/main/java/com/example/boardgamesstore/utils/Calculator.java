@@ -1,4 +1,4 @@
-package com.boardgamesstore.spockvsjunit.utils;
+package com.example.boardgamesstore.utils;
 
 public class Calculator {
 

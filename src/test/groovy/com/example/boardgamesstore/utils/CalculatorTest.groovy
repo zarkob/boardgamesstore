@@ -1,5 +1,6 @@
-package com.boardgamesstore.spockvsjunit.utils;
+package com.example.boardgamesstore.utils
 
+import com.example.boardgamesstore.utils.Calculator;
 import spock.lang.Specification;
 
 class CalculatorSpec extends Specification {

@@ -1,5 +1,6 @@
-package com.boardgamesstore.spockvsjunit.utils;
+package com.example.boardgamesstore.utils;
 
+import com.example.boardgamesstore.utils.Calculator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
