@@ -77,6 +77,12 @@
             <artifactId>spock-junit4</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Optional dependency for using Spock with Spring -->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Optional dependencies for using Spock -->
         <dependency> <!-- use a specific Groovy version rather than the one specified by spock-core -->
             <groupId>org.apache.groovy</groupId>
