@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 @Entity
 @Data
@@ -16,6 +18,7 @@ public class BoardGame {
     private Long id;
     private String name;
     private String publisher;
+    private BigDecimal price;
 
 
 }
