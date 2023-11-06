@@ -9,22 +9,26 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardGameServiceTest {
 
     @Mock
-    private BoardGameRepository boardGameRepository;
+    private BoardGameRepository mockBoardGameRepository;
+
+    @Mock
+    private DiscountService mockDiscountService;
 
     @InjectMocks
     private BoardGameService boardGameService;
+
 
     @Test
     public void findBoardGameByNameShouldReturnGame() {
@@ -32,14 +36,14 @@ public class BoardGameServiceTest {
         String gameName = "Catan";
         BoardGame catan = new BoardGame();
         catan.setName(gameName);
-        when(boardGameRepository.findByName(gameName)).thenReturn(Optional.of(catan));
+        when(mockBoardGameRepository.findByName(gameName)).thenReturn(Optional.of(catan));
 
         // When
-        Optional<BoardGame> foundGame = boardGameService.findBoardGameByName(gameName);
+        BoardGame foundGame = boardGameService.findBoardGameByName(gameName);
 
         // Then
-        assertTrue(foundGame.isPresent(), "Game should be found");
-        assertEquals(gameName, foundGame.get().getName(), "Game name should be Catan");
+        assertNotNull(foundGame, "Game should be found");
+        assertEquals(gameName, foundGame.getName(), "Game name should be Catan");
     }
 
     @ParameterizedTest
@@ -52,13 +56,56 @@ public class BoardGameServiceTest {
         // Given
         BoardGame game = new BoardGame();
         game.setPublisher(publisher);
-        when(boardGameRepository.findByPublisher(publisher)).thenReturn(List.of(game));
+        when(mockBoardGameRepository.findByPublisher(publisher)).thenReturn(List.of(game));
 
         // When
         List<BoardGame> foundGames = boardGameService.findBoardGamesByPublisher(publisher);
 
         // Then
         assertEquals(expectedCount, foundGames.size(), "Game count should match expected count");
+    }
+
+    /**
+     * Exercise 3: Mocks and stubbing
+     */
+    @Test
+    public void testFindBoardGameByName() {
+        // Arrange
+        BoardGameService boardGameService = new BoardGameService(mockBoardGameRepository, mockDiscountService);
+        BoardGame mockGame = new BoardGame();
+        mockGame.setName("Chess");
+        when(mockBoardGameRepository.findByName("Chess")).thenReturn(Optional.of(mockGame));
+
+        // Act
+        BoardGame result = boardGameService.findBoardGameByName("Chess");
+
+        // Assert
+        assertNotNull(result, "Game should be found");
+        assertEquals("Chess", result.getName());
+        verify(mockBoardGameRepository, times(1)).findByName("Chess");
+    }
+
+    @Test
+    public void testFindBoardGameByName_WithDiscount() {
+        // Arrange
+        BoardGameService boardGameService = new BoardGameService(mockBoardGameRepository, mockDiscountService);
+
+        BoardGame mockGame = new BoardGame();
+        mockGame.setName("Chess");
+        mockGame.setPrice(BigDecimal.valueOf(50.0));
+
+        when(mockBoardGameRepository.findByName("Chess")).thenReturn(Optional.of(mockGame));
+        when(mockDiscountService.applyDiscount("Chess", BigDecimal.valueOf(50.0))).thenReturn(BigDecimal.valueOf(40.0));
+
+        // Act
+        BoardGame result = boardGameService.findBoardGameByName("Chess");
+
+        // Assert
+        assertNotNull(result, "Game should be found");
+        assertEquals("Chess", result.getName());
+        assertEquals(BigDecimal.valueOf(40.0), result.getPrice());
+        verify(mockBoardGameRepository, times(1)).findByName("Chess");
+        verify(mockDiscountService, times(1)).applyDiscount("Chess", BigDecimal.valueOf(50.0));
     }
 }
 
