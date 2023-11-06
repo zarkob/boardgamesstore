@@ -1,5 +1,6 @@
 package com.example.boardgamesstore.service;
 
+import com.example.boardgamesstore.exceptions.OutOfStockException;
 import com.example.boardgamesstore.model.BoardGame;
 import com.example.boardgamesstore.repository.BoardGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,22 @@ public class BoardGameService {
     public BoardGameService(BoardGameRepository boardGameRepository, DiscountService discountService) {
         this.boardGameRepository = boardGameRepository;
         this.discountService = discountService;
+    }
+
+    public BoardGame purchaseGame(Long gameId) throws OutOfStockException {
+        Optional<BoardGame> optionalGame = boardGameRepository.findById(gameId);
+
+        if (optionalGame.isPresent()) {
+            BoardGame game = optionalGame.get();
+            if (game.getStock() > 0) {
+                game.setStock(game.getStock() - 1);
+                return boardGameRepository.save(game);
+            } else {
+                throw new OutOfStockException("The game is out of stock.");
+            }
+        } else {
+            throw new OutOfStockException("The game does not exist.");
+        }
     }
 
     public BoardGame findBoardGameByName(String name) {

@@ -10,7 +10,9 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+    show-sql: true
   # Enable H2 Console
   h2:
     console:
       enabled: true
+

@@ -1,5 +1,6 @@
 package com.example.boardgamesstore.service;
 
+import com.example.boardgamesstore.exceptions.OutOfStockException;
 import com.example.boardgamesstore.model.BoardGame;
 import com.example.boardgamesstore.repository.BoardGameRepository;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,58 @@ public class BoardGameServiceTest {
     private BoardGameService boardGameService;
 
 
+    /**
+     * Exercise 4: Testing Exceptions
+     */
+    @Test
+    public void testPurchaseGameSuccessful() throws OutOfStockException {
+        // Arrange
+        Long gameId = 1L;
+        BoardGame game = new BoardGame();
+        game.setId(gameId);
+        game.setStock(2);
+
+        when(mockBoardGameRepository.findById(gameId)).thenReturn(Optional.of(game));
+        when(mockBoardGameRepository.save(game)).thenReturn(game);
+
+        // Act
+        BoardGame purchasedGame = boardGameService.purchaseGame(gameId);
+
+        // Assert
+        assertEquals(1, purchasedGame.getStock());
+    }
+
+    @Test
+    public void testPurchaseGameOutOfStock() {
+        // Arrange
+        Long gameId = 2L;
+        BoardGame game = new BoardGame();
+        game.setId(gameId);
+        game.setStock(0);
+
+        when(mockBoardGameRepository.findById(gameId)).thenReturn(Optional.of(game));
+
+        // Act and Assert
+        assertThrows(OutOfStockException.class, () -> boardGameService.purchaseGame(gameId));
+    }
+
+    @Test
+    public void testPurchaseGameGameNotExists() {
+        // Arrange
+        Long gameId = 3L;
+
+        when(mockBoardGameRepository.findById(gameId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(OutOfStockException.class, () -> boardGameService.purchaseGame(gameId));
+    }
+
+
+
+
+    /**
+     * Exercise 3: Mocks and stubbing
+     */
     @Test
     public void findBoardGameByNameShouldReturnGame() {
         // Given

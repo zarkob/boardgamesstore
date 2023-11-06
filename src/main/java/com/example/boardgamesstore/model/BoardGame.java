@@ -19,6 +19,7 @@ public class BoardGame {
     private String name;
     private String publisher;
     private BigDecimal price;
+    private Integer stock;
 
 
 }
