@@ -22,6 +22,21 @@ public class BoardGameService {
         this.discountService = discountService;
     }
 
+    public List<BoardGame> getAllBoardGames() {
+        return boardGameRepository.findAll();
+    }
+
+    public BoardGame findBoardGameById(Long id) {
+        BoardGame boardGame = null;
+
+        Optional<BoardGame> optionalBoardGame = boardGameRepository.findById(id);
+        if (!optionalBoardGame.isPresent()) {
+            throw new RuntimeException("Game not found");
+        }
+        boardGame = optionalBoardGame.get();
+        return boardGame;
+    }
+
     public BoardGame purchaseGame(Long gameId) throws OutOfStockException {
         Optional<BoardGame> optionalGame = boardGameRepository.findById(gameId);
 
